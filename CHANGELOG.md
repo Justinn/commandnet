@@ -1,9 +1,11 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+## [0.0.3] - 2025-05-18
+### Added
+- Installed React Testing Library and its peer dependencies for component testing.
+- Added an example test for the sentry-example-page component.
 
 ## [Unreleased]
-
 
 ## [0.0.2] - 2025-05-18
 ### Added
@@ -11,9 +13,4 @@ All notable changes to this project will be documented in this file.
 
 ## [0.0.1] - 2025-05-18
 ### Added
-- Installed Material UI (`@mui/material`), `@emotion/react`, and `@emotion/styled` dependencies for UI development.
-
-## [0.0.3] - 2025-05-18
-### Added
-- Installed React Testing Library and its peer dependencies for component testing.
-- Added an example test for the sentry-example-page component. 
+- Installed Material UI (`@mui/material`), `@emotion/react`, and `@emotion/styled` dependencies for UI development. 
