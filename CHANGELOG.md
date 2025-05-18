@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.0.5] - 2025-05-18
+### Changed
+- Updated all neon cyan (#00fff7) accents, theme colors, and highlights to blue-cyan neon (#00bfff) for a more modern, cohesive look. See [#10](https://github.com/Justinn/commandnet/issues/10).
+
 ## [0.0.4] - 2025-05-18
 ### Changed
 - Redesigned homepage

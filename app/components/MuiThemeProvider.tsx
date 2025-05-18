@@ -8,7 +8,7 @@ const theme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#00fff7', // neon cyan
+      main: '#00bfff', // blue-cyan neon
     },
     background: {
       default: '#0a0f1a',
@@ -16,7 +16,7 @@ const theme = createTheme({
     },
     text: {
       primary: '#e0f7fa',
-      secondary: '#00fff7',
+      secondary: '#00bfff',
     },
   },
   typography: {
