@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.0.7] - 2025-05-19
+### Added
+- Passwordless Email Authentication: Integrated NextAuth with a passwordless email login flow using the Resend email provider.
+  - New API route at `app/api/auth/[...nextauth]/route.ts` for authentication.
+  - Uses Prisma as the database adapter and Resend for sending magic links.
+  - Login page (`/login`) for users to sign in with their email.
+- Prisma Models for Auth: Added/updated Prisma models for `User`, `Account`, `Session`, and `VerificationToken` to support NextAuth.
+- Session Management: Components now use NextAuth session hooks to display user info and authentication state.
+- Client Providers: Added a `ClientProviders` component to wrap the app with NextAuth's `SessionProvider`.
+- Mobile Support: Improved responsive design and mobile usability across the app.
+
+### Changed
+- UI Updates: Header, Sidebar, and MainContent components updated to reflect authentication state and provide sign-in/sign-out flows.
+- Replaced Material UI (MUI) with styled-components for all UI styling.
+- Updated dependencies in `package.json` to include all necessary packages for authentication, email, and styled-components.
+
+### Added
+- Integrated Prisma ORM and Vercel Postgres for database caching.
+- Added a `Cache` model and API route for database connectivity.
+
 ## [0.0.6] - 2025-05-18
 ### Added
 - Integrated Prisma ORM and Vercel Postgres for database caching.
