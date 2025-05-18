@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.8] - 2025-05-19
+### Added
+- **SpaceTraders API Client Foundation:** Implemented a reusable, authenticated API client for SpaceTraders endpoints with robust request queueing and distributed rate limiting ([#15](https://github.com/Justinn/commandnet/issues/15)).
+- **Global Rate Limiting:** Integrated Upstash Redis to enforce global (distributed) rate limits across all serverless instances and deployments.
+- **Request Queue:** Requests are queued and processed in order, automatically respecting rate limits and retrying after HTTP 429 responses.
+- **Error Handling & Logging:** Integrated Sentry for error tracking throughout the client.
+- **Unit Tests:** Added Jest tests for request queueing and rate limiting logic, including mocking of Redis for reliable, isolated test runs.
+
 ## [0.0.7] - 2025-05-19
 ### Added
 - Passwordless Email Authentication: Integrated NextAuth with a passwordless email login flow using the Resend email provider.
