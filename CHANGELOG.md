@@ -19,4 +19,8 @@
 
 ## [0.0.1] - 2025-05-18
 ### Added
-- Installed Material UI (`@mui/material`), `@emotion/react`, and `@emotion/styled` dependencies for UI development. 
+- Installed Material UI (`@mui/material`), `@emotion/react`, and `@emotion/styled` dependencies for UI development.
+
+## [Unreleased]
+### Added
+- Integrated Prisma ORM and Vercel Postgres for database caching. Added a `Cache` model and API route for database connectivity. See [#3](https://github.com/Justinn/commandnet/issues/3). 

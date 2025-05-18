@@ -14,8 +14,11 @@
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^7.1.0",
     "@mui/material": "^7.1.0",
+    "@prisma/client": "^6.8.2",
     "@sentry/nextjs": "^9.19.0",
     "next": "15.3.2",
+    "pg": "^8.16.0",
+    "prisma": "^6.8.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
