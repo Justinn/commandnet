@@ -43,3 +43,12 @@ next-env.d.ts
 /.cursor
 # Sentry Config File
 .env.sentry-build-plugin
+.env*.local
+
+# Ignore generated Prisma client
+lib/generated/prisma/
+
+# Ignore all environment files
+.env
+.env.development
+.env.production
