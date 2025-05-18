@@ -1,9 +1,9 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
-
-## [Unreleased]
-
+## [0.0.3] - 2025-05-18
+### Added
+- Installed React Testing Library and its peer dependencies for component testing.
+- Added an example test for the sentry-example-page component.
 
 ## [0.0.2] - 2025-05-18
 ### Added
