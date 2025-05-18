@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.0.4] - 2025-05-18
+### Changed
+- Redesigned homepage
+
 ## [0.0.3] - 2025-05-18
 ### Added
 - Installed React Testing Library and its peer dependencies for component testing.
