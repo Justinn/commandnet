@@ -22,6 +22,7 @@ const Title = styled.h4`
   font-size: 2rem;
   text-shadow: 0 0 0.75rem ${({ theme }) => theme.colors.primary};
   font-family: ${({ theme }) => theme.fonts.main};
+  text-align: center;
 `;
 
 const Form = styled.form`

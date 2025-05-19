@@ -22,6 +22,12 @@ import RateLimitManager from '@/lib/spacetraders/rateLimitManager';
  * This client is designed for use in the CommandNet project to automate and interact with the SpaceTraders game API.
  */
 
+export enum SpaceTradersEndpoint {
+  MyAgent = '/my/agent',
+  Register = '/register',
+  // Add more endpoints as needed
+}
+
 export class SpaceTradersClient {
   // Queue to hold pending requests
   private requestQueue: Array<() => void> = [];
@@ -33,8 +39,8 @@ export class SpaceTradersClient {
   // API token for authentication
   private token: string;
 
-  constructor(token: string) {
-    this.token = token;
+  constructor(token?: string) {
+    this.token = token ?? "";
   }
 
   /**
@@ -47,10 +53,10 @@ export class SpaceTradersClient {
 
   /**
    * Make an authenticated request to the SpaceTraders API.
-   * @param endpoint The API endpoint (e.g., '/my/ships')
+   * @param endpoint The API endpoint (e.g., '/my/ships') or SpaceTradersEndpoint
    * @param options Fetch options (method, body, etc.)
    */
-  public async request(endpoint: string, options: RequestInit = {}): Promise<any> {
+  public async request(endpoint: string | SpaceTradersEndpoint, options: RequestInit = {}): Promise<any> {
     return new Promise((resolve, reject) => {
       const task = async () => {
         try {
@@ -73,9 +79,11 @@ export class SpaceTradersClient {
     const url = `https://api.spacetraders.io/v2${endpoint}`;
     const headers = {
       ...(options.headers || {}),
-      Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     };
+    if (this.token) {
+      (headers as any).Authorization = `Bearer ${this.token}`;
+    }
     let response;
     try {
       response = await fetch(url, { ...options, headers });
@@ -119,19 +127,31 @@ export class SpaceTradersClient {
     }
 
     if (!response.ok) {
-      // Log other API errors
-      const error = new Error(`API error: ${response.status}`);
+      // Log other API errors with response body
+      let errorBody: any = {};
+      try {
+        errorBody = await response.json();
+      } catch (e) {
+        // ignore JSON parse errors
+      }
+      const error = new Error(`API error: ${response.status} - ${JSON.stringify(errorBody)}`);
       Sentry.captureException(error, {
         extra: {
           endpoint,
           status: response.status,
           headers: Object.fromEntries(response.headers.entries()),
+          errorBody,
         },
       });
       throw error;
     }
 
-    return response.json();
+    // Unwrap the data property if present
+    const json = await response.json();
+    if (json && typeof json === 'object' && 'data' in json) {
+      return json.data;
+    }
+    return json;
   }
 
   // Private: Process the request queue

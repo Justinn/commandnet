@@ -1,7 +1,12 @@
 "use client";
 
 import styled from 'styled-components';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
+import { useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
+import { useEffect, useState } from 'react';
+// React Icons
+import { FaHome, FaUser, FaRocket, FaFileAlt, FaGlobe, FaStore, FaSignOutAlt } from 'react-icons/fa';
 
 const NeonIcon = styled.span`
   display: flex;
@@ -49,6 +54,7 @@ const ToolbarSpacer = styled.div`
 `;
 
 const MenuContainer = styled.div`
+  flex: 1 1 auto;
   overflow-y: auto;
   overflow-x: hidden;
   margin-top: 2rem;
@@ -61,6 +67,7 @@ const MenuContainer = styled.div`
     align-items: center;
     justify-content: space-around;
     height: 100%;
+    flex: unset;
   }
 `;
 
@@ -88,14 +95,27 @@ const NavList = styled.ul`
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-around;
+    justify-content: flex-start;
     height: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    scrollbar-width: thin;
+    scrollbar-color: ${({ theme }) => theme.colors.primary} transparent;
+    &::-webkit-scrollbar {
+      height: 0.3rem;
+      background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: ${({ theme }) => theme.colors.primary};
+      border-radius: 0.2rem;
+    }
   }
 `;
 
 const NavItem = styled.li`
   @media (max-width: 600px) {
-    flex: 1 1 0;
+    flex: 0 0 auto;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -104,8 +124,8 @@ const NavItem = styled.li`
 `;
 
 const NavButton = styled.button<{
-  $active: boolean;
-  $disabled: boolean;
+  $$active: boolean;
+  $$disabled: boolean;
 }>`
   width: calc(100% - 1.5rem);
   display: flex;
@@ -114,27 +134,27 @@ const NavButton = styled.button<{
   margin: 0 0.75rem 0.5rem 0.75rem;
   padding: 0.5rem 0.75rem;
   min-height: 2.2rem;
-  background: ${({ $active }) =>
-    $active
+  background: ${({ $$active }) =>
+    $$active
       ? 'linear-gradient(90deg, rgba(16,22,36,0.95) 60%, rgba(45,26,74,0.95) 100%)'
       : 'rgba(16,22,36,0.7)'};
-  box-shadow: ${({ $active, theme }) =>
-    $active ? `0 0 0.5rem ${theme.colors.primary}` : 'none'};
-  border: ${({ $active, theme }) =>
-    $active ? `1px solid ${theme.colors.primary}` : '1px solid rgba(0,191,255,0.08)'};
-  opacity: ${({ $disabled }) => ($disabled ? 0.5 : 1)};
-  cursor: ${({ $disabled }) => ($disabled ? 'not-allowed' : 'pointer')};
+  box-shadow: ${({ $$active, theme }) =>
+    $$active ? `0 0 0.5rem ${theme.colors.primary}` : 'none'};
+  border: ${({ $$active, theme }) =>
+    $$active ? `1px solid ${theme.colors.primary}` : '1px solid rgba(0,191,255,0.08)'};
+  opacity: ${({ $$disabled }) => ($$disabled ? 0.5 : 1)};
+  cursor: ${({ $$disabled }) => ($$disabled ? 'not-allowed' : 'pointer')};
   color: ${({ theme }) => theme.colors.primary};
   transition: all 0.2s;
   &:hover {
-    background: ${({ $disabled }) =>
-      $disabled
+    background: ${({ $$disabled }) =>
+      $$disabled
         ? undefined
         : 'linear-gradient(90deg, rgba(16,22,36,1) 60%, rgba(45,26,74,1) 100%)'};
-    box-shadow: ${({ $disabled, theme }) =>
-      $disabled ? undefined : `0 0 0.7rem ${theme.colors.primary}`};
-    border: ${({ $disabled, theme }) =>
-      $disabled ? undefined : `1px solid ${theme.colors.primary}`};
+    box-shadow: ${({ $$disabled, theme }) =>
+      $$disabled ? undefined : `0 0 0.7rem ${theme.colors.primary}`};
+    border: ${({ $$disabled, theme }) =>
+      $$disabled ? undefined : `1px solid ${theme.colors.primary}`};
   }
   @media (max-width: 600px) {
     width: 3.5rem;
@@ -147,8 +167,8 @@ const NavButton = styled.button<{
     padding: 0;
     justify-content: center;
     border-radius: 50%;
-    background: ${({ $active }) =>
-      $active
+    background: ${({ $$active }) =>
+      $$active
         ? 'linear-gradient(135deg, rgba(16,22,36,1) 60%, rgba(45,26,74,1) 100%)'
         : 'rgba(16,22,36,0.7)'};
   }
@@ -201,43 +221,133 @@ const Tooltip = styled.div`
   }
 `;
 
-// Placeholder icons
-const HomeIcon = () => <span role="img" aria-label="home">🏠</span>;
-const PersonIcon = () => <span role="img" aria-label="person">👤</span>;
-const RocketLaunchIcon = () => <span role="img" aria-label="rocket">🚀</span>;
-const AssignmentIcon = () => <span role="img" aria-label="assignment">📄</span>;
-const PublicIcon = () => <span role="img" aria-label="public">🌐</span>;
-const StorefrontIcon = () => <span role="img" aria-label="storefront">🏪</span>;
-
-const NEON_COLOR = '#00bfff'; // blue-cyan neon (Deep Sky Blue)
-
 const navItems = [
-  { label: 'Home', icon: HomeIcon, active: true, disabled: false },
-  { label: 'Agent', icon: PersonIcon, active: false, disabled: true },
-  { label: 'Ships', icon: RocketLaunchIcon, active: false, disabled: true },
-  { label: 'Contracts', icon: AssignmentIcon, active: false, disabled: true },
-  { label: 'Systems', icon: PublicIcon, active: false, disabled: true },
-  { label: 'Markets', icon: StorefrontIcon, active: false, disabled: true },
+  { label: 'Home', icon: FaHome, active: false, disabled: false, path: '/' },
+  { label: 'Manage Agents', icon: FaUser, active: false, disabled: false, path: '/agents' },
+  { label: 'Ships', icon: FaRocket, active: false, disabled: true },
+  { label: 'Contracts', icon: FaFileAlt, active: false, disabled: true },
+  { label: 'Systems', icon: FaGlobe, active: false, disabled: true },
+  { label: 'Markets', icon: FaStore, active: false, disabled: true },
 ];
 
+const BoxyButton = styled.button`
+  background: ${({ theme }) => theme.colors.background};
+  color: ${({ theme }) => theme.colors.primary};
+  border: 0.15rem solid ${({ theme }) => theme.colors.primary};
+  border-radius: 0.22rem;
+  padding: 0.5rem 0.7rem;
+  font-size: 1rem;
+  font-weight: 700;
+  width: 100%;
+  margin: 0.5rem 0 0 0;
+  box-shadow: 0 0 0.7rem ${({ theme }) => theme.colors.primary}33;
+  transition: background 0.18s, color 0.18s, border 0.18s;
+  cursor: pointer;
+  &:hover {
+    background: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.background};
+    border-color: ${({ theme }) => theme.colors.primary};
+  }
+`;
+
+const LogoutIconButton = styled.button`
+  background: ${({ theme }) => 'linear-gradient(90deg, rgba(16,22,36,0.95) 60%, rgba(45,26,74,0.95) 100%)'};
+  color: ${({ theme }) => theme.colors.primary};
+  border: 1px solid ${({ theme }) => theme.colors.primary};
+  border-radius: 50%;
+  box-shadow: 0 0 0.5rem ${({ theme }) => theme.colors.primary};
+  width: 3.5rem;
+  height: 3.5rem;
+  min-width: 3.5rem;
+  min-height: 3.5rem;
+  max-width: 3.5rem;
+  max-height: 3.5rem;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 2rem;
+  margin: 0 0.25rem;
+  transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+  &:hover, &:focus {
+    background: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.background};
+    box-shadow: 0 0 1.5rem ${({ theme }) => theme.colors.primary};
+    border: 1px solid ${({ theme }) => theme.colors.primary};
+  }
+`;
+
+// Custom hook to detect mobile view
+function useIsMobile(breakpoint = 600) {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= breakpoint);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, [breakpoint]);
+  return isMobile;
+}
+
+const SlidingSidebarContainer = styled(SidebarContainer)<{ $mobile: boolean }>`
+  @media (max-width: 600px) {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100vw;
+    min-height: unset;
+    height: 4.5rem;
+    transform: translateY(${({ $mobile }) => ($mobile ? '0' : '100%')});
+    transition: transform 0.38s cubic-bezier(0.4, 0.2, 0.2, 1);
+    z-index: 20000;
+  }
+`;
+
+const DesktopLogoutButton = styled(BoxyButton)`
+  display: block;
+  max-width: 10rem;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  @media (max-width: 600px) {
+    display: none;
+  }
+`;
+
+const MobileLogoutButton = styled(LogoutIconButton)`
+  display: none;
+  @media (max-width: 600px) {
+    display: flex;
+  }
+`;
+
 export default function Sidebar() {
+  const { status } = useSession();
   const router = useRouter();
+  const pathname = usePathname();
+  const isMobile = useIsMobile(600);
+  // Dynamically set disabled for 'Manage Agents' if not authenticated
+  const navItemsWithAuth = navItems.map(item =>
+    item.label === 'Manage Agents'
+      ? { ...item, disabled: status !== 'authenticated' }
+      : item
+  );
   return (
-    <SidebarContainer>
+    <SlidingSidebarContainer $mobile={isMobile}>
       <ToolbarSpacer />
       <MenuContainer>
         <MenuTitle>Menu</MenuTitle>
         <NavList>
-          {navItems.map((item) => {
+          {navItemsWithAuth.map((item) => {
             const Icon = item.icon;
+            const isActive = item.path ? pathname === item.path : item.active;
             const button = (
               <NavButton
                 key={item.label}
-                $active={item.active}
-                $disabled={item.disabled}
+                $$active={isActive}
+                $$disabled={item.disabled}
                 onClick={
-                  item.label === 'Home' && !item.disabled
-                    ? () => router.push('/')
+                  !item.disabled && item.path
+                    ? () => router.push(item.path!)
                     : undefined
                 }
                 disabled={item.disabled}
@@ -250,15 +360,36 @@ export default function Sidebar() {
               </NavButton>
             );
             return item.disabled ? (
-              <Tooltip key={item.label} data-tooltip="Under construction">
+              <Tooltip key={item.label} data-tooltip={item.label === 'Manage Agents' ? 'Sign in to manage agents' : 'Under construction'}>
                 <span style={{ display: 'block' }}>{button}</span>
               </Tooltip>
             ) : (
               <NavItem key={item.label}>{button}</NavItem>
             );
           })}
+          {/* Mobile logout button as a nav item */}
+          {status === 'authenticated' && isMobile && (
+            <NavItem key="logout-mobile">
+              <MobileLogoutButton
+                onClick={() => signOut({ callbackUrl: "/login" })}
+                aria-label="Logout"
+              >
+                <FaSignOutAlt />
+              </MobileLogoutButton>
+            </NavItem>
+          )}
         </NavList>
       </MenuContainer>
-    </SidebarContainer>
+      {/* Desktop logout button at the bottom */}
+      {status === 'authenticated' && !isMobile && (
+        <div style={{ width: '100%', marginTop: 'auto', padding: '1.5rem 0 1.5rem 0', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <DesktopLogoutButton
+            onClick={() => signOut({ callbackUrl: "/login" })}
+          >
+            Logout
+          </DesktopLogoutButton>
+        </div>
+      )}
+    </SlidingSidebarContainer>
   );
 } 

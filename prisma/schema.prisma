@@ -31,6 +31,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   username      String?  @unique
+  agents        Agent[]
 }
 
 model Account {
@@ -66,4 +67,19 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Agent {
+  id               Int      @id @default(autoincrement()) // Internal unique ID
+  accountId        String   // SpaceTraders accountId (not unique)
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId           String
+  symbol           String   @unique
+  token            String   @unique // Each agent must have a unique token
+  startingFaction  String   // Renamed from 'faction' for clarity
+  headquarters     String
+  credits          Int
+  shipCount        Int
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }
