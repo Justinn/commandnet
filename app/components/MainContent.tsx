@@ -13,6 +13,7 @@ const Container = styled.div`
   justify-content: center;
   min-height: calc(100vh - 4rem);
   font-family: ${({ theme }) => theme.fonts.main};
+  text-align: center;
 
   @media (max-width: 600px) {
     padding: 1rem;

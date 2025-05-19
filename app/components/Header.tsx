@@ -1,8 +1,6 @@
 "use client";
 
 import styled from 'styled-components';
-import { useSession, signOut } from "next-auth/react";
-import { PrimaryButton } from "@/app/components/PrimaryButton";
 
 const HeaderBar = styled.header`
   width: 100%;
@@ -34,7 +32,7 @@ const Title = styled.h2`
   font-size: 2.5rem;
   letter-spacing: 0.12em;
   text-shadow: 0 0 2rem ${({ theme }) => theme.colors.primary}, 0 0 1rem ${({ theme }) => theme.colors.primary};
-  text-align: left;
+  text-align: center;
   line-height: 1.1;
   margin: 0;
   @media (max-width: 600px) {
@@ -55,33 +53,11 @@ const NeonBar = styled.div`
   }
 `;
 
-const LogoutButtonWrapper = styled.div`
-  position: absolute;
-  top: 1.2rem;
-  right: 2.5rem;
-  z-index: 10;
-  @media (max-width: 600px) {
-    top: 0.7rem;
-    right: 1rem;
-  }
-`;
-
 export default function Header() {
-  const { status } = useSession();
   return (
     <HeaderBar style={{ position: 'relative' }}>
       <HeaderToolbar>
         <Title>CommandNet</Title>
-        {status === "authenticated" && (
-          <LogoutButtonWrapper>
-            <PrimaryButton
-              style={{ marginTop: 0 }}
-              onClick={() => signOut({ callbackUrl: "/login" })}
-            >
-              Logout
-            </PrimaryButton>
-          </LogoutButtonWrapper>
-        )}
       </HeaderToolbar>
       <NeonBar />
     </HeaderBar>
