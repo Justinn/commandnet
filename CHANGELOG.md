@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.0.9] - 2025-05-19
+### Added
+- **Agent Management Feature:** First SpaceTraders integration ([#17](https://github.com/Justinn/commandnet/issues/17))
+  - Agent Management UI: New pages and components for agent management (listing, registering, selecting, etc.).
+  - API Endpoints: New API routes for agent CRUD operations.
+  - Context/State: New context for agent state management.
+  - Sidebar navigation and responsive, mobile-friendly design for agent management.
+  - Well-tested using React-Testing-Library.
+- **Prisma Migrations:** Database schema changes to support agent management (agent fields, account id changes, etc.).
+- **General Refactoring:** Updates to shared components and authentication logic.
+
+### Changed
+- Updates to authentication and shared layout components to support agent management workflows.
+
+### Removed
+- Deprecated API routes: db-test and sentry-example-api. 
+
 ## [0.0.8] - 2025-05-19
 ### Added
 - **SpaceTraders API Client Foundation:** Implemented a reusable, authenticated API client for SpaceTraders endpoints with robust request queueing and distributed rate limiting ([#15](https://github.com/Justinn/commandnet/issues/15)).
@@ -53,20 +70,3 @@
 ## [0.0.1] - 2025-05-18
 ### Added
 - Installed Material UI (`@mui/material`), `@emotion/react`, and `@emotion/styled` dependencies for UI development.
-
-## [0.0.9] - 2025-05-19
-### Added
-- **Agent Management Feature:** First SpaceTraders integration ([#17](https://github.com/Justinn/commandnet/issues/17))
-  - Agent Management UI: New pages and components for agent management (listing, registering, selecting, etc.).
-  - API Endpoints: New API routes for agent CRUD operations.
-  - Context/State: New context for agent state management.
-  - Sidebar navigation and responsive, mobile-friendly design for agent management.
-  - Well-tested using React-Testing-Library.
-- **Prisma Migrations:** Database schema changes to support agent management (agent fields, account id changes, etc.).
-- **General Refactoring:** Updates to shared components and authentication logic.
-
-### Changed
-- Updates to authentication and shared layout components to support agent management workflows.
-
-### Removed
-- Deprecated API routes: db-test and sentry-example-api. 
