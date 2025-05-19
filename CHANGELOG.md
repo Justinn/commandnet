@@ -7,7 +7,6 @@
   - API Endpoints: New API routes for agent CRUD operations.
   - Context/State: New context for agent state management.
   - Sidebar navigation and responsive, mobile-friendly design for agent management.
-  - Well-tested using React-Testing-Library.
 - **Prisma Migrations:** Database schema changes to support agent management (agent fields, account id changes, etc.).
 - **General Refactoring:** Updates to shared components and authentication logic.
 
