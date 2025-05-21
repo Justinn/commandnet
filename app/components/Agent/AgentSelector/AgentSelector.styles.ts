@@ -1,12 +1,6 @@
-"use client";
-
-import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Agent } from "@/lib/spacetraders/agent";
-import { AgentApiEndpoint } from "@/lib/constants";
-import { FaTrash } from 'react-icons/fa';
 
-const List = styled.ul`
+export const List = styled.ul`
   width: 100%;
   padding: 0;
   list-style: none;
@@ -15,14 +9,14 @@ const List = styled.ul`
   gap: 1.2rem;
 `;
 
-const ContentWrapper = styled.div`
+export const ContentWrapper = styled.div`
   padding: 2rem 1.5rem 1.5rem 1.5rem;
   @media (max-width: 600px) {
     padding: 1rem 0.5rem 0.7rem 0.5rem;
   }
 `;
 
-const AgentCard = styled.li<{ $active: boolean }>`
+export const AgentCard = styled.li<{ $active: boolean }>`
   background: ${({ theme, $active }) =>
     $active
       ? `linear-gradient(90deg, ${theme.colors.primary}22 0%, ${theme.colors.primary}11 100%)`
@@ -58,21 +52,21 @@ const AgentCard = styled.li<{ $active: boolean }>`
   }
 `;
 
-const AgentHeader = styled.div`
+export const AgentHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 0.5rem;
 `;
 
-const AgentSymbol = styled.span`
+export const AgentSymbol = styled.span`
   font-family: var(--font-share-tech-mono);
   font-size: 1.3rem;
   font-weight: 700;
   color: ${({ theme }) => theme.colors.primary};
 `;
 
-const ActiveBadge = styled.span`
+export const ActiveBadge = styled.span`
   background: ${({ theme }) => theme.colors.primary};
   color: ${({ theme }) => theme.colors.background};
   font-size: 0.9rem;
@@ -83,7 +77,7 @@ const ActiveBadge = styled.span`
   box-shadow: 0 0 0.5rem ${({ theme }) => theme.colors.primary};
 `;
 
-const AgentDetails = styled.div`
+export const AgentDetails = styled.div`
   color: ${({ theme }) => theme.colors.textPrimary};
   font-size: 1.05rem;
   display: flex;
@@ -92,7 +86,7 @@ const AgentDetails = styled.div`
   margin-top: 0.2rem;
 `;
 
-const RemoveButton = styled.button`
+export const RemoveButton = styled.button`
   background: none;
   border: none;
   color: #ff4d4f;
@@ -116,7 +110,7 @@ const RemoveButton = styled.button`
   }
 `;
 
-const DialogOverlay = styled.div`
+export const DialogOverlay = styled.div`
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
   background: rgba(0,0,0,0.45);
@@ -126,7 +120,7 @@ const DialogOverlay = styled.div`
   justify-content: center;
 `;
 
-const DialogBox = styled.div`
+export const DialogBox = styled.div`
   background: ${({ theme }) => theme.colors.background};
   border: 2px solid ${({ theme }) => theme.colors.primary};
   border-radius: 0.7rem;
@@ -138,21 +132,21 @@ const DialogBox = styled.div`
   z-index: 1001;
 `;
 
-const DialogTitle = styled.div`
+export const DialogTitle = styled.div`
   font-size: 1.25rem;
   font-weight: 700;
   color: ${({ theme }) => theme.colors.primary};
   margin-bottom: 1.1rem;
 `;
 
-const DialogActions = styled.div`
+export const DialogActions = styled.div`
   display: flex;
   justify-content: center;
   gap: 1.5rem;
   margin-top: 1.5rem;
 `;
 
-const DialogButton = styled.button`
+export const DialogButton = styled.button`
   padding: 0.7rem 1.5rem;
   border-radius: 0.4rem;
   border: none;
@@ -171,7 +165,7 @@ const DialogButton = styled.button`
   }
 `;
 
-const CancelButton = styled(DialogButton)`
+export const CancelButton = styled(DialogButton)`
   background: ${({ theme }) => theme.colors.background};
   color: ${({ theme }) => theme.colors.primary};
   border: 2px solid ${({ theme }) => theme.colors.primary};
@@ -179,81 +173,4 @@ const CancelButton = styled(DialogButton)`
     background: ${({ theme }) => theme.colors.primary};
     color: ${({ theme }) => theme.colors.background};
   }
-`;
-
-export function AgentSelector({
-  agents,
-  onRemove,
-  removingId,
-  selectedAgent,
-  setSelectedAgent,
-}: {
-  agents: Agent[];
-  onRemove: (agent: Agent) => void;
-  removingId?: string | null;
-  selectedAgent: Agent | null;
-  setSelectedAgent: (agent: Agent) => void;
-}) {
-  const [pendingRemove, setPendingRemove] = React.useState<Agent | null>(null);
-
-  if (!agents.length) {
-    return <div>No agents found for your account.</div>;
-  }
-
-  return (
-    <>
-      <List>
-        <ContentWrapper>
-          {agents.map((agent) => (
-            <AgentCard
-              key={agent.id}
-              $active={selectedAgent?.id === agent.id}
-              className={removingId === agent.id ? 'slide-out' : ''}
-              onClick={() => setSelectedAgent(agent)}
-              tabIndex={0}
-              aria-selected={selectedAgent?.id === agent.id}
-            >
-              <AgentHeader>
-                <AgentSymbol>{agent.symbol}</AgentSymbol>
-                {selectedAgent?.id === agent.id && <ActiveBadge>Active</ActiveBadge>}
-              </AgentHeader>
-              <AgentDetails>
-                <span key="hq">HQ: {agent.headquarters}</span>
-                <span key="credits">Credits: {agent.credits.toLocaleString()}</span>
-                <span key="faction">Faction: {agent.startingFaction}</span>
-                <span key="ships">Ships: {agent.shipCount}</span>
-              </AgentDetails>
-              <RemoveButton
-                title="Remove agent"
-                onClick={e => {
-                  e.stopPropagation();
-                  setPendingRemove(agent);
-                }}
-                aria-label={`Remove agent ${agent.symbol}`}
-              >
-                <FaTrash />
-              </RemoveButton>
-            </AgentCard>
-          ))}
-        </ContentWrapper>
-      </List>
-      {pendingRemove && (
-        <DialogOverlay>
-          <DialogBox>
-            <DialogTitle>Remove Agent?</DialogTitle>
-            <div style={{ marginBottom: '0.7rem' }}>
-              Are you sure you want to remove <b>{pendingRemove.symbol}</b> from your account?
-            </div>
-            <DialogActions>
-              <CancelButton onClick={() => setPendingRemove(null)}>Cancel</CancelButton>
-              <DialogButton onClick={() => {
-                onRemove(pendingRemove);
-                setPendingRemove(null);
-              }}>Remove</DialogButton>
-            </DialogActions>
-          </DialogBox>
-        </DialogOverlay>
-      )}
-    </>
-  );
-} 
+`; 

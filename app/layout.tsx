@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Share_Tech_Mono } from "next/font/google";
 import "@/app/globals.css";
-import StyledThemeProvider from "@/app/components/StyledThemeProvider";
 import Header from "@/app/components/Header";
 import Sidebar from "@/app/components/Sidebar";
 import StyledComponentsRegistry from "@/app/components/StyledComponentsRegistry";

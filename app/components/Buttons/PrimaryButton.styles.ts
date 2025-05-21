@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 import Link from 'next/link';
 
-const buttonStyles = css`
+export const buttonStyles = css`
   display: inline-block;
   background: ${({ theme }) => theme.colors.primary};
   color: ${({ theme }) => theme.colors.textPrimary};

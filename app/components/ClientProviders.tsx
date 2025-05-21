@@ -2,7 +2,7 @@
 
 import { SessionProvider } from "next-auth/react";
 import StyledThemeProvider from "@/app/components/StyledThemeProvider";
-import { AgentProvider } from "@/app/components/AgentContext";
+import { AgentProvider } from "@/app/context/AgentContext";
 
 export default function ClientProviders({ children }: { children: React.ReactNode }) {
   return (

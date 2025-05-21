@@ -1,20 +1,6 @@
-import React from "react";
 import styled from "styled-components";
 
-export type Tab = {
-  label: string;
-  value: string;
-  disabled?: boolean;
-};
-
-interface TabsProps {
-  tabs: Tab[];
-  active: string;
-  onChange: (value: string) => void;
-  className?: string;
-}
-
-const TabsBar = styled.div`
+export const TabsBar = styled.div`
   position: relative;
   display: flex;
   gap: 0.5rem;
@@ -30,7 +16,7 @@ const TabsBar = styled.div`
   }
 `;
 
-const TabButton = styled.button<{ $active: boolean; $disabled: boolean }>`
+export const TabButton = styled.button<{ $active: boolean; $disabled: boolean }>`
   position: relative;
   flex: 1 1 0;
   font-family: var(--font-share-tech-mono);
@@ -56,7 +42,7 @@ const TabButton = styled.button<{ $active: boolean; $disabled: boolean }>`
   }
 `;
 
-const TabHighlight = styled.div<{ $index: number; $count: number }>`
+export const TabHighlight = styled.div<{ $index: number; $count: number }>`
   position: absolute;
   bottom: 0.15rem;
   left: ${({ $index, $count }) => `${($index / $count) * 100}%`};
@@ -66,31 +52,4 @@ const TabHighlight = styled.div<{ $index: number; $count: number }>`
   border-radius: 0.2rem;
   box-shadow: 0 0 0.7rem ${({ theme }) => theme.colors.primary};
   transition: left 0.32s cubic-bezier(0.7, 0.2, 0.2, 1);
-`;
-
-export const Tabs: React.FC<TabsProps> = ({ tabs, active, onChange, className }) => {
-  const activeIdx = tabs.findIndex(tab => tab.value === active);
-  return (
-    <TabsBar className={className} role="tablist">
-      {tabs.map((tab, idx) => (
-        <TabButton
-          key={tab.value}
-          $active={active === tab.value}
-          $disabled={!!tab.disabled}
-          onClick={() => !tab.disabled && onChange(tab.value)}
-          type="button"
-          role="tab"
-          aria-selected={active === tab.value}
-          aria-disabled={!!tab.disabled}
-          tabIndex={tab.disabled ? -1 : active === tab.value ? 0 : -1}
-          disabled={!!tab.disabled}
-        >
-          {tab.label}
-        </TabButton>
-      ))}
-      {activeIdx !== -1 && (
-        <TabHighlight $index={activeIdx} $count={tabs.length} />
-      )}
-    </TabsBar>
-  );
-}; 
+`; 
