@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.0.10] - 2025-05-19
+### Added
+- **Component Cleanup & Reusability:** Refactored components to maximize reusability (DRY principle), moved shared logic to hooks/utilities, and made components as stateless as possible.
+- **Unit Testing:** Added or improved unit tests for all refactored components using React-Testing-Library, targeting at least 80% coverage for affected components.
+- **Mobile UI/UX Enhancements:** Added tooltips or accessible hints for disabled icons/buttons on mobile, improved responsiveness and accessibility, and ensured all interactive elements are touch-friendly.
+
+### Changed
+- General code quality improvements: removed or merged duplicate components, followed project conventions (e.g., @ alias, scalable units for styling), and ensured no new lint/type errors.
+- All tests pass in CI.
+
 ## [0.0.9] - 2025-05-19
 ### Added
 - **Agent Management Feature:** First SpaceTraders integration ([#17](https://github.com/Justinn/commandnet/issues/17))
